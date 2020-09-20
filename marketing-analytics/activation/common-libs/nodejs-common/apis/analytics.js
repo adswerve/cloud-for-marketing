@@ -64,7 +64,7 @@ class Analytics {
    * @return {!Promise<boolean>} Promise returning whether data import
    *     succeeded.
    */
-  uploadData(data, config, batchId = 'unnamed') {
+  uploadData(data, config, batchId = 'unnamed', deleteOlderThanDays = undefined) {
     const uploadConfig = Object.assign(
         {
           media: {
@@ -73,6 +73,38 @@ class Analytics {
           }
         },
         config);
+
+    if (Number.isInteger(deleteOlderThanDays) && deleteOlderThanDays >= 0) {
+      // list all uploaded files and delete thos eolder than deleteOlderThanDays
+      this.instance.then((ga) => {
+        ga.management.uploads.list(config)
+          .then((results) => {
+            if (results && !results.error) {
+              var uploadsToDelete = []
+              var uploads = results.items;
+              for (var i = 0, upload; upload = uploads[i]; i++) {
+                if ((new Date()) - upload.uploadTime > deleteOlderThanDays) { // TODO: Do this properly
+                  uploadsToDelete.push(upload.id)
+                }       
+              }
+
+              if (uploadsToDelete) {
+                ga.management.uploads.deleteUploadData({
+                  'accountId': config.accountId,
+                  'webPropertyId': config.webPropertyId,
+                  'customDataSourceId': config.customDataSourceId,
+                  'resource': {
+                    'customDataImportUids': uploadsToDelete
+                  }
+                });
+                request.execute(function (response) {});
+              }
+
+            }
+          });
+      });
+    }
+
     return this.instance.then((ga) => {
       return ga.management.uploads.uploadData(uploadConfig)
           .then((response) => {
