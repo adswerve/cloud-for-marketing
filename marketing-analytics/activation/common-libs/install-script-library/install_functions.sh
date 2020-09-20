@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # Cloud Functions Runtime Environment.
-CF_RUNTIME="${CF_RUNTIME:=nodejs8}"
+CF_RUNTIME="${CF_RUNTIME:=nodejs10}"
 
 # Counter for steps.
 STEP=0

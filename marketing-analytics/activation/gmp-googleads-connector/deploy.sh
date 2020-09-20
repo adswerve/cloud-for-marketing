@@ -371,7 +371,7 @@ deploy_tentacles() {
   local cf_flag=()
   cf_flag+=(--region="${REGION}")
   cf_flag+=(--timeout=540 --memory=2048MB --runtime="${CF_RUNTIME}")
-  cf_flag+=(--set-env-vars=TENTACLES_TOPIC_PREFIX="${PS_TOPIC}")
+  cf_flag+=(--set-env-vars=TENTACLES_TOPIC_PREFIX="${PS_TOPIC}", CODE_LOCATION="/srv")
 
   printf '%s\n' " 1. '${PROJECT_NAME}_init' is triggered by new files from \
 Cloud Storage bucket [${GCS_BUCKET}]."
