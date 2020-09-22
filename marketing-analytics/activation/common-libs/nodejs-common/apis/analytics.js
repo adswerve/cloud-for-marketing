@@ -91,7 +91,7 @@ class Analytics {
               }
 
               if (uploadsToDelete.length) {
-                const request = ga.management.uploads.deleteUploadData({
+                ga.management.uploads.deleteUploadData({
                   'accountId': config.accountId,
                   'webPropertyId': config.webPropertyId,
                   'customDataSourceId': config.customDataSourceId,
