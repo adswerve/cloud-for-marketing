@@ -100,7 +100,12 @@ class Analytics {
                   }
                 }).then((response) => {
                   if (response && !response.error) {
-                    console.log("Deleted " + response.config.data.customDataImportUids.length + " upload files");
+                    try {
+                      console.log("Deleted " + response.config.data.customDataImportUids.length + " upload files");
+                    }catch(e){
+                      //Handle the case where response.config.data.customDataImportUids does not exist
+                      console.error(e);
+                    }
                   } else {
                     console.error(response ? response.error.message : "API call response failed");
                   }
