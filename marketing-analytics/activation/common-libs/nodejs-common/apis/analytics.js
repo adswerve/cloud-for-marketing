@@ -75,21 +75,23 @@ class Analytics {
         config);
 
     if (Number.isInteger(deleteOlderThanDays) && deleteOlderThanDays >= 0) {
-      // list all uploaded files and delete thos eolder than deleteOlderThanDays
+      // list all uploaded files and delete those older than deleteOlderThanDays
       this.instance.then((ga) => {
         ga.management.uploads.list(config)
           .then((results) => {
             if (results && !results.error) {
-              var uploadsToDelete = []
-              var uploads = results.items;
-              for (var i = 0, upload; upload = uploads[i]; i++) {
-                if ((new Date()) - upload.uploadTime > deleteOlderThanDays) { // TODO: Do this properly
-                  uploadsToDelete.push(upload.id)
+              const uploadsToDelete = [];
+              const uploads = results.data.items;
+              const timeNow = new Date();
+              for (let upload of uploads) {
+                const timeUploaded = new Date(upload.uploadTime);
+                if ((timeNow.getTime() - timeUploaded.getTime())/ (1000 * 3600 * 24) > deleteOlderThanDays) { 
+                  uploadsToDelete.push(upload.id);
                 }       
               }
 
-              if (uploadsToDelete) {
-                ga.management.uploads.deleteUploadData({
+              if (uploadsToDelete.length) {
+                const request = ga.management.uploads.deleteUploadData({
                   'accountId': config.accountId,
                   'webPropertyId': config.webPropertyId,
                   'customDataSourceId': config.customDataSourceId,
@@ -97,7 +99,7 @@ class Analytics {
                     'customDataImportUids': uploadsToDelete
                   }
                 });
-                request.execute(function (response) {});
+                request.execute((response) => {});
               }
 
             }
