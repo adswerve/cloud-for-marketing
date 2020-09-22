@@ -98,13 +98,15 @@ exports.sendData = (message, messageId, config) => {
         .then((file) => {
           const stream = file.createReadStream();
           const analytics = new Analytics();
-          return analytics.uploadData(stream, config.gaConfig, messageId);
+          const deleteOlderThanDays = config.deleteOlderThanDays && parseInt(config.deleteOlderThanDays, 10);
+          return analytics.uploadData(stream, config.gaConfig, messageId, deleteOlderThanDays);
         });
   } else {  // Data comes from the message data.
     if (config.dataImportHeader) {
       data = config.dataImportHeader + '\n' + data;
     }
     const analytics = new Analytics();
-    return analytics.uploadData(data, config.gaConfig, messageId);
+    const deleteOlderThanDays = config.deleteOlderThanDays && parseInt(config.deleteOlderThanDays, 10);
+    return analytics.uploadData(data, config.gaConfig, messageId, deleteOlderThanDays);
   }
 };

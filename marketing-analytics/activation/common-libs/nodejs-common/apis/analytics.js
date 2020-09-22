@@ -98,7 +98,13 @@ class Analytics {
                   'resource': {
                     'customDataImportUids': uploadsToDelete
                   }
-                }).then((response) => {});
+                }).then((response) => {
+                  if (response && !response.error) {
+                    console.log("Deleted " + response.config.data.customDataImportUids.length + " upload files");
+                  } else {
+                    console.error(response ? response.error.message : "API call response failed");
+                  }
+                });
               }
 
             }
