@@ -98,8 +98,7 @@ class Analytics {
                   'resource': {
                     'customDataImportUids': uploadsToDelete
                   }
-                });
-                request.execute((response) => {});
+                }).then((response) => {});
               }
 
             }
