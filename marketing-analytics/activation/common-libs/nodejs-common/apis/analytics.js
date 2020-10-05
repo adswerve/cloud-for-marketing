@@ -82,12 +82,14 @@ class Analytics {
             if (results && !results.error) {
               const uploadsToDelete = [];
               const uploads = results.data.items;
-              const timeNow = new Date();
-              for (let upload of uploads) {
-                const timeUploaded = new Date(upload.uploadTime);
-                if ((timeNow.getTime() - timeUploaded.getTime())/ (1000 * 3600 * 24) > deleteOlderThanDays) { 
-                  uploadsToDelete.push(upload.id);
-                }       
+              if (uploads) {
+                const timeNow = new Date();
+                for (let upload of uploads) {
+                  const timeUploaded = new Date(upload.uploadTime);
+                  if ((timeNow.getTime() - timeUploaded.getTime())/ (1000 * 3600 * 24) > deleteOlderThanDays) { 
+                    uploadsToDelete.push(upload.id);
+                  }       
+                }
               }
 
               if (uploadsToDelete.length) {
